@@ -1,0 +1,149 @@
+/* css/index.css */
+
+/* --- HEADER (Faixa Superior) --- */
+.barra-alerta {
+    background-color: #12224A; /* Azul Marinho médio */
+    color: #ffffff;
+    padding: 10px 0;
+    text-align: center;
+    border-bottom: 2px solid #ffffff; /* Borda branca separadora */
+    z-index: 10;
+}
+
+.header-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 0 20px;
+}
+
+.alerta-pulsante {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.cesupa-logo-header .logo-svg { height: 40px; width: auto; }
+
+.system-status {
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+/* --- MAIN (Conteúdo Central) --- */
+.conteudo-principal {
+    flex: 1; 
+    display: flex;
+    justify-content: center;
+    align-items: center; /* ISSO AQUI FAZ A MÁGICA DE NÃO ESTICAR */
+    padding: 20px;
+}
+
+/* Limita a largura para não deformar no zoom out */
+.painel-flex-preenchido {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 1400px; /* Impede que estique demais */
+    margin: 0 auto;
+}
+
+.terminal-box {
+    background-color: #16285A; /* Azul Marinho das caixas */
+    border: 1px solid rgba(255, 255, 255, 0.4); /* Borda branca sutil */
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+.painel-log { flex: 1.2; }
+.painel-controle { flex: 0.8; justify-content: space-between; }
+
+.alerta-pulsante-text {
+    color: #ffffff;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    text-align: center;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+    padding-bottom: 10px;
+}
+
+.log-entry { margin-bottom: 10px; font-family: 'Courier New', monospace; font-size: 0.95rem; }
+.log-entry.timestamp { color: #94A3B8; }
+.log-entry.system { color: #ffffff; font-weight: bold; }
+.log-entry.mission { font-size: 1rem; color: #CBD5E1; }
+
+/* --- Widgets (Caixas menores na direita) --- */
+.status-widgets { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+
+.widget {
+    background-color: #0F1A3A; /* Azul bem escuro para contraste */
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.widget-title {
+    font-size: 1rem;
+    color: #ffffff;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 5px;
+}
+
+.regras-emergencia {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left: 5px solid #ffffff;
+    padding: 15px;
+    margin-bottom: 20px;
+    color: #ffffff;
+    border-radius: 4px;
+}
+
+/* --- BOTÃO (Branco e Azul Marinho) --- */
+.botoes-acao { display: flex; justify-content: center; }
+
+.btn-resgate {
+    background-color: transparent;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.btn-resgate:hover {
+    background-color: #ffffff;
+    color: #0A142F; /* Texto fica azul marinho ao passar o mouse */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+/* --- FOOTER --- */
+.barra-footer {
+    background-color: #0F1A3A;
+    color: #94A3B8;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}

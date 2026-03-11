@@ -1,11 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Escape Room CESUPA: A Fuga de Girotto</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    
+
+    <main class="full-screen-container">
+        
+        <header class="barra-alerta">
+            <div class="header-content">
+                <div class="alerta-pulsante">
+                    <span class="icon">🚨</span> 
+                    SISTEMA DE SEGURANÇA CESUPA - STATUS DE CONFINAMENTO ATIVADO
+                    <span class="icon">🚨</span>
+                </div>
+                <div class="cesupa-logo-header">
+                    <svg class="logo-svg" viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg">
+                        <text x="5" y="15" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff">CESUPA</text>
+                        </svg>
+                </div>
+                <div class="system-status">
+                    BLOQUEIO TOTAL DE PORTAS E CATRACAS
+                </div>
+            </div>
+        </header>
+
+        <section class="conteudo-principal">
+            
+            <div class="painel-flex-preenchido">
+                <div class="painel-log terminal-box">
+                    <div class="alerta-pulsante-text">
+                        ⚠️ INCIDENTE NO CESUPA - RELATÓRIO DE SEGURANÇA (3ª PESSOA)
+                    </div>
+                    
+                    <div class="logs-seguranca history-box">
+                        <p class="log-entry timestamp">[11 MAR 2026 - 21:03]</p>
+                        <p class="log-entry system">> ALERTA: Coordenadora Alessandra acionou o bloqueio de perímetro mais cedo.</p>
+                        <p class="log-entry system">> STATUS: Prédio isolado. Catracas travadas eletronicamente.</p>
+                        
+                        <p class="log-entry mission story-p">Sexta-feira. O campus está vazio. Mas os sensores de presença detectaram um movimento na sala de Cálculo. É o professor <strong>Pedro Girotto</strong>, preso e cercado por pilhas de provas não corrigidas!</p>
+                        <p class="log-entry mission story-p">Para escapar e encontrar a chave da saída principal, Girotto precisará avançar **sala por sala**, resolvendo os enigmas matemáticos de Cálculo 2 deixados no sistema, até finalmente alcançar a liberdade.</p>
+                    </div>
+                </div>
+
+                <div class="painel-controle terminal-box">
+                    <div class="status-widgets widgets-box">
+                        <div class="widget">
+                            <h4 class="widget-title">STATUS DO PERÍMETRO</h4>
+                            <p class="widget-p">Sala de Aula (1): TRANCADO</p>
+                            <p class="widget-p">Biblioteca: TRANCADO</p>
+                            <p class="widget-p">Sala dos Professores: TRANCADO</p>
+                        </div>
+                        <div class="widget">
+                            <h4 class="widget-title">REQUISITOS DE CÓDIGO</h4>
+                            <p class="widget-p">Todo acesso deve ter '+ C' obrigatório.</p>
+                        </div>
+                    </div>
+
+                    <div class="regras-emergencia rules-box">
+                        <p class="regra-p">⚠️ **AVISO DE SEGURANÇA DE CÓDIGOS MATEMÁTICOS:** A ausência da constante '+ C' causará bloqueio imediato da fechadura.</p>
+                    </div>
+
+                    <div class="botoes-acao container-btn">
+                        <button id="btn-iniciar" class="btn-resgate btn-acao">
+                            <span class="btn-text">INICIAR A FUGA DO PROFESSOR </span>
+                            <span class="btn-icon">🚪</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <footer class="barra-footer">
+            CESUPA Security Systems v1.0.1 - "Operação Escapar Girotto"
+        </footer>
+
+    </main>
+
+    <script src="js/index.js"></script>
 </body>
 </html>
