@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnIniciar.style.color = "#0A142F";
             
             setTimeout(() => {
-                window.location.href = "pages/sala1.html"; 
+                window.location.href = "pages/fase1.html"; 
             }, 1500);
         });
     }

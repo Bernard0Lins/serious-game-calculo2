@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fase 1 - Sala dos Professores | A Fuga de Girotto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --azul-escuro: #0A142F;
+            --azul-medio: #12224A;
+            --azul-painel: #16285A;
+            --branco: #ffffff;
+            --cinza-texto: #CBD5E1;
+            --cinza-dim: #94A3B8;
+            --verde-ok: #22c55e;
+            --vermelho-erro: #ef4444;
+            --amarelo-aviso: #f59e0b;
+            --borda: rgba(255,255,255,0.25);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            background-color: var(--azul-escuro);
+            color: var(--branco);
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background-color: var(--azul-medio);
+            border-bottom: 2px solid var(--branco);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-alerta {
+            font-weight: bold;
+            letter-spacing: 2px;
+            font-size: 0.85rem;
+            animation: pisca 1.5s infinite;
+        }
+        @keyframes pisca { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .header-info { display:flex; gap:20px; align-items:center; font-size:0.85rem; color:var(--cinza-dim); }
+        .tentativas-display { color:var(--branco); font-weight:bold; }
+        .tentativas-display.aviso { color:var(--amarelo-aviso); }
+        .tentativas-display.critico { color:var(--vermelho-erro); animation:pisca 0.8s infinite; }
+        main { flex:1; display:flex; justify-content:center; align-items:flex-start; padding:20px; gap:20px; }
+        .painel-narrativa {
+            flex:1.1; background:var(--azul-painel); border:1px solid var(--borda);
+            border-radius:8px; padding:25px; display:flex; flex-direction:column; gap:18px; max-width:520px;
+        }
+        .painel-titulo { font-family:'Orbitron',sans-serif; font-size:0.8rem; color:var(--cinza-dim); text-transform:uppercase; letter-spacing:3px; border-bottom:1px dashed var(--borda); padding-bottom:10px; }
+        .sala-status { display:flex; flex-direction:column; gap:8px; }
+        .sala-item { display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:rgba(0,0,0,0.2); border-radius:4px; border-left:3px solid var(--borda); font-size:0.85rem; }
+        .sala-item.ativo { border-left-color:var(--amarelo-aviso); }
+        .sala-item.liberado { border-left-color:var(--verde-ok); }
+        .status-badge { font-size:0.75rem; padding:2px 8px; border-radius:3px; background:rgba(255,255,255,0.1); color:var(--cinza-dim); }
+        .status-badge.ativo { background:rgba(245,158,11,0.2); color:var(--amarelo-aviso); }
+        .status-badge.liberado { background:rgba(34,197,94,0.2); color:var(--verde-ok); }
+        .narrativa-box { background:rgba(0,0,0,0.25); border-radius:6px; padding:15px; font-size:0.9rem; line-height:1.7; color:var(--cinza-texto); border-left:3px solid rgba(255,255,255,0.3); }
+        .narrativa-box strong { color:var(--branco); }
+        .dica-box { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.3); border-radius:6px; padding:14px; font-size:0.85rem; color:var(--cinza-texto); }
+        .dica-box .dica-titulo { color:var(--amarelo-aviso); font-weight:bold; margin-bottom:6px; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; }
+        .painel-terminal { flex:1; background:var(--azul-painel); border:1px solid var(--borda); border-radius:8px; padding:25px; display:flex; flex-direction:column; gap:18px; max-width:460px; }
+        .enunciado-box { background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:18px; text-align:center; }
+        .enunciado-label { font-size:0.75rem; color:var(--cinza-dim); text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
+        .enunciado-integral { font-size:1.5rem; color:var(--branco); font-family:'Orbitron',sans-serif; letter-spacing:1px; line-height:1.5; }
+        .passos-box { display:flex; flex-direction:column; gap:10px; }
+        .passo { display:flex; align-items:center; gap:10px; padding:10px 14px; background:rgba(0,0,0,0.2); border-radius:5px; border:1px solid var(--borda); transition:border-color 0.3s; }
+        .passo.correto { border-color:var(--verde-ok); background:rgba(34,197,94,0.05); }
+        .passo.errado { border-color:var(--vermelho-erro); background:rgba(239,68,68,0.05); }
+        .passo-num { font-family:'Orbitron',sans-serif; font-size:0.7rem; color:var(--cinza-dim); min-width:20px; }
+        .passo-texto { flex:1; font-size:0.9rem; color:var(--cinza-texto); }
+        .passo-icone { font-size:1rem; min-width:20px; text-align:center; }
+        .input-area { display:flex; flex-direction:column; gap:10px; }
+        .input-label { font-size:0.8rem; color:var(--cinza-dim); text-transform:uppercase; letter-spacing:1px; }
+        .input-resposta { background:rgba(0,0,0,0.4); border:1px solid var(--borda); border-radius:6px; color:var(--branco); font-family:'Share Tech Mono',monospace; font-size:1rem; padding:12px 15px; outline:none; transition:border-color 0.3s, box-shadow 0.3s; width:100%; }
+        .input-resposta:focus { border-color:rgba(255,255,255,0.6); box-shadow:0 0 10px rgba(255,255,255,0.1); }
+        .input-resposta.correto { border-color:var(--verde-ok); box-shadow:0 0 10px rgba(34,197,94,0.2); }
+        .input-resposta.errado { border-color:var(--vermelho-erro); box-shadow:0 0 10px rgba(239,68,68,0.2); animation:shake 0.4s ease; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+        .btn-confirmar { background:transparent; border:2px solid var(--branco); color:var(--branco); font-family:'Orbitron',sans-serif; font-size:0.85rem; font-weight:700; padding:12px; border-radius:6px; cursor:pointer; letter-spacing:2px; transition:all 0.3s; width:100%; }
+        .btn-confirmar:hover { background:var(--branco); color:var(--azul-escuro); box-shadow:0 0 15px rgba(255,255,255,0.3); }
+        .btn-confirmar:disabled { opacity:0.4; cursor:not-allowed; }
+        .feedback-box { padding:12px 15px; border-radius:6px; font-size:0.9rem; text-align:center; font-weight:bold; display:none; letter-spacing:1px; }
+        .feedback-box.ok { display:block; background:rgba(34,197,94,0.15); border:1px solid var(--verde-ok); color:var(--verde-ok); }
+        .feedback-box.erro { display:block; background:rgba(239,68,68,0.15); border:1px solid var(--vermelho-erro); color:var(--vermelho-erro); }
+        .progresso-bar { display:flex; gap:6px; justify-content:center; }
+        .prog-dot { width:28px; height:6px; border-radius:3px; background:rgba(255,255,255,0.15); transition:background 0.4s; }
+        .prog-dot.ativo { background:var(--amarelo-aviso); }
+        .prog-dot.concluido { background:var(--verde-ok); }
+        .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:100; }
+        .overlay.ativo { display:flex; }
+        .overlay-card { background:var(--azul-painel); border:2px solid var(--verde-ok); border-radius:12px; padding:40px 50px; text-align:center; max-width:420px; box-shadow:0 0 40px rgba(34,197,94,0.3); animation:surgir 0.5s ease; }
+        .overlay-card.derrota { border-color:var(--vermelho-erro); box-shadow:0 0 40px rgba(239,68,68,0.3); }
+        @keyframes surgir { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
+        .overlay-icone { font-size:3rem; margin-bottom:15px; }
+        .overlay-titulo { font-family:'Orbitron',sans-serif; font-size:1.2rem; font-weight:900; letter-spacing:2px; margin-bottom:12px; }
+        .overlay-texto { color:var(--cinza-texto); font-size:0.9rem; line-height:1.6; margin-bottom:25px; }
+        .btn-proximo { background:var(--verde-ok); border:none; color:#000; font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.85rem; padding:13px 30px; border-radius:6px; cursor:pointer; letter-spacing:2px; transition:all 0.3s; }
+        .btn-proximo:hover { box-shadow:0 0 20px rgba(34,197,94,0.5); transform:scale(1.03); }
+        .btn-reiniciar { background:var(--vermelho-erro); border:none; color:var(--branco); font-family:'Orbitron',sans-serif; font-weight:700; font-size:0.85rem; padding:13px 30px; border-radius:6px; cursor:pointer; letter-spacing:2px; transition:all 0.3s; }
+        .btn-reiniciar:hover { box-shadow:0 0 20px rgba(239,68,68,0.5); transform:scale(1.03); }
+        footer { background:#0F1A3A; color:var(--cinza-dim); text-align:center; padding:10px; font-size:0.8rem; border-top:1px solid var(--borda); }
+        .questao-header { display:flex; justify-content:space-between; align-items:center; }
+        .questao-num-badge { background:rgba(255,255,255,0.08); border:1px solid var(--borda); padding:3px 10px; border-radius:4px; font-size:0.75rem; color:var(--cinza-dim); }
+        .widget-p { font-size:0.85rem; color:var(--cinza-texto); margin-bottom:4px; }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-alerta">&#128680; FASE 1 &mdash; SALA DOS PROFESSORES &mdash; SISTEMA BLOQUEADO &#128680;</div>
+    <div class="header-info">
+        <span>TENTATIVAS: <span class="tentativas-display" id="tentativas-display">5</span></span>
+        <span>QUESTAO: <span id="questao-atual-display">1</span>/3</span>
+    </div>
+</header>
+
+<main>
+    <aside class="painel-narrativa">
+        <div class="painel-titulo">&#128205; STATUS DO PERIMETRO</div>
+        <div class="sala-status">
+            <div class="sala-item ativo">
+                <span>&#128274; Sala dos Professores</span>
+                <span class="status-badge ativo">EM CURSO</span>
+            </div>
+            <div class="sala-item">
+                <span>&#128274; Corredor Principal</span>
+                <span class="status-badge">TRANCADO</span>
+            </div>
+            <div class="sala-item">
+                <span>&#128274; Elevador</span>
+                <span class="status-badge">TRANCADO</span>
+            </div>
+            <div class="sala-item">
+                <span>&#128274; Portao Principal</span>
+                <span class="status-badge">TRANCADO</span>
+            </div>
+        </div>
+        <div class="narrativa-box">
+            <strong>&gt; SISTEMA DE SEGURANCA CESUPA:</strong><br><br>
+            Girotto tenta acessar o terminal da sala dos professores para reiniciar o sistema e destravar a porta.<br><br>
+            A tela pede uma sequencia de <strong>3 senhas matematicas</strong> baseadas em <strong>Integral Indefinida</strong>.<br><br>
+            Cada resposta correta desbloqueia um fragmento da senha. Resolva tudo antes que as tentativas acabem!
+        </div>
+        <div class="dica-box">
+            <div class="dica-titulo">&#9888;&#65039; Regra do Sistema</div>
+            Toda integral indefinida DEVE incluir a constante de integracao <strong>+ C</strong>. Sem ela, o sistema rejeita o acesso automaticamente.
+        </div>
+        <div class="progresso-bar" id="progresso-bar">
+            <div class="prog-dot ativo" id="dot-0"></div>
+            <div class="prog-dot" id="dot-1"></div>
+            <div class="prog-dot" id="dot-2"></div>
+        </div>
+    </aside>
+
+    <section class="painel-terminal">
+        <div class="questao-header">
+            <div class="painel-titulo">&#128187; TERMINAL DE DESBLOQUEIO</div>
+            <div class="questao-num-badge" id="questao-badge">PROTOCOLO 1/3</div>
+        </div>
+        <div class="enunciado-box">
+            <div class="enunciado-label">Calcule a integral:</div>
+            <div class="enunciado-integral" id="enunciado-integral"></div>
+        </div>
+        <div class="passos-box" id="passos-box"></div>
+        <div class="input-area">
+            <div class="input-label">&#9654; Digite a resposta final:</div>
+            <input type="text" class="input-resposta" id="input-resposta" placeholder="Ex: x^2 + C" autocomplete="off" spellcheck="false"/>
+            <div class="feedback-box" id="feedback-box"></div>
+            <button class="btn-confirmar" id="btn-confirmar">CONFIRMAR ACESSO</button>
+        </div>
+    </section>
+</main>
+
+<div class="overlay" id="overlay-vitoria">
+    <div class="overlay-card">
+        <div class="overlay-icone">&#128275;</div>
+        <div class="overlay-titulo" style="color:var(--verde-ok)">ACESSO LIBERADO</div>
+        <div class="overlay-texto">
+            Senha confirmada com sucesso!<br>
+            <strong>Porta da Sala dos Professores desbloqueada.</strong><br><br>
+            Girotto avanca para o corredor principal...
+        </div>
+        <button class="btn-proximo" id="btn-proximo">AVANCAR PARA FASE 2 &#9654;</button>
+    </div>
+</div>
+
+<div class="overlay" id="overlay-derrota">
+    <div class="overlay-card derrota">
+        <div class="overlay-icone">&#128274;</div>
+        <div class="overlay-titulo" style="color:var(--vermelho-erro)">SISTEMA BLOQUEADO</div>
+        <div class="overlay-texto">
+            Tentativas esgotadas!<br>
+            <strong>O sistema entrou em modo de bloqueio total.</strong><br><br>
+            Girotto precisara reiniciar o protocolo de acesso.
+        </div>
+        <button class="btn-reiniciar" onclick="reiniciarFase()">&#8635; REINICIAR FASE 1</button>
+    </div>
+</div>
+
+<footer>
+    CESUPA Security Systems v1.0.1 &mdash; Fase 1: Sala dos Professores &mdash; Integral Indefinida
+</footer>
+
+<script>
+const questoes = [
+    {
+        enunciado: "&#8747; 3x&#178; dx",
+        passos: [
+            "Aplicar a regra da potencia: &#8747; x&#8319; dx = x&#8319;&#8314;&#185; / (n+1)",
+            "Calcular: &#8747; 3x&#178; dx = 3 &middot; x&#179;/3",
+            "Simplificar e nao esquecer o + C"
+        ],
+        respostas: ["x3+c","x^3+c","x3 + c","x^3 + c"],
+        gabarito: "x&#179; + C"
+    },
+    {
+        enunciado: "&#8747; 4x&#179; dx",
+        passos: [
+            "Aplicar a regra da potencia: &#8747; x&#8319; dx = x&#8319;&#8314;&#185; / (n+1)",
+            "Calcular: &#8747; 4x&#179; dx = 4 &middot; x&#8308;/4",
+            "Simplificar e nao esquecer o + C"
+        ],
+        respostas: ["x4+c","x^4+c","x4 + c","x^4 + c"],
+        gabarito: "x&#8308; + C"
+    },
+    {
+        enunciado: "&#8747; (2x + 5) dx",
+        passos: [
+            "Separar: &#8747; 2x dx + &#8747; 5 dx",
+            "Integrar cada termo: x&#178; + 5x",
+            "Somar e nao esquecer o + C"
+        ],
+        respostas: ["x2+5x+c","x^2+5x+c","x2 + 5x + c","x^2 + 5x + c"],
+        gabarito: "x&#178; + 5x + C"
+    }
+];
+
+let questaoAtual = 0;
+let tentativasRestantes = 5;
+
+function inicializarQuestao() {
+    const q = questoes[questaoAtual];
+    document.getElementById("enunciado-integral").innerHTML = q.enunciado;
+    const passosBox = document.getElementById("passos-box");
+    passosBox.innerHTML = "";
+    q.passos.forEach((passo, i) => {
+        const div = document.createElement("div");
+        div.className = "passo";
+        div.id = "passo-" + i;
+        div.innerHTML = '<span class="passo-num">0' + (i+1) + '</span><span class="passo-texto">' + passo + '</span><span class="passo-icone">&rarr;</span>';
+        passosBox.appendChild(div);
+    });
+    document.getElementById("questao-badge").textContent = "PROTOCOLO " + (questaoAtual+1) + "/3";
+    document.getElementById("questao-atual-display").textContent = questaoAtual + 1;
+    const input = document.getElementById("input-resposta");
+    input.value = "";
+    input.className = "input-resposta";
+    input.disabled = false;
+    const fb = document.getElementById("feedback-box");
+    fb.className = "feedback-box";
+    fb.textContent = "";
+    document.getElementById("btn-confirmar").disabled = false;
+    atualizarProgresso();
+    setTimeout(() => input.focus(), 100);
+}
+
+function atualizarProgresso() {
+    for (let i = 0; i < 3; i++) {
+        const dot = document.getElementById("dot-" + i);
+        if (!dot) continue;
+        dot.className = "prog-dot";
+        if (i < questaoAtual) dot.classList.add("concluido");
+        else if (i === questaoAtual) dot.classList.add("ativo");
+    }
+}
+
+function normalizarResposta(r) {
+    return r.toLowerCase().replace(/\s/g, "").replace(/[²]/g,"2").replace(/[³]/g,"3").replace(/[⁴]/g,"4");
+}
+
+document.getElementById("btn-confirmar").addEventListener("click", verificarResposta);
+document.getElementById("input-resposta").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") verificarResposta();
+});
+
+function verificarResposta() {
+    const input = document.getElementById("input-resposta");
+    const fb = document.getElementById("feedback-box");
+    const btn = document.getElementById("btn-confirmar");
+    const resposta = normalizarResposta(input.value.trim());
+    if (!resposta) return;
+
+    const q = questoes[questaoAtual];
+    const temC = resposta.includes("+c");
+    const correto = temC && q.respostas.some(function(r) { return normalizarResposta(r) === resposta; });
+
+    if (!temC) {
+        input.className = "input-resposta errado";
+        fb.className = "feedback-box erro";
+        fb.textContent = "ACESSO NEGADO - Constante + C ausente! O sistema exige a solucao completa.";
+        tentativasRestantes--;
+        atualizarTentativas();
+        marcarPassoErrado(2);
+        if (tentativasRestantes <= 0) mostrarDerrota();
+        return;
+    }
+
+    if (correto) {
+        input.className = "input-resposta correto";
+        fb.className = "feedback-box ok";
+        fb.textContent = "SENHA " + (questaoAtual+1) + " CONFIRMADA - Fragmento " + (questaoAtual+1) + "/3 desbloqueado!";
+        btn.disabled = true;
+        for (let i = 0; i < q.passos.length; i++) {
+            (function(idx) {
+                setTimeout(function() {
+                    const p = document.getElementById("passo-" + idx);
+                    if (p) { p.className = "passo correto"; p.querySelector('.passo-icone').innerHTML = "&#10003;"; }
+                }, idx * 200);
+            })(i);
+        }
+        setTimeout(function() {
+            questaoAtual++;
+            if (questaoAtual >= questoes.length) mostrarVitoria();
+            else inicializarQuestao();
+        }, 1800);
+    } else {
+        input.className = "input-resposta errado";
+        fb.className = "feedback-box erro";
+        fb.textContent = "ACESSO NEGADO - Resultado incorreto. Verifique o calculo.";
+        tentativasRestantes--;
+        atualizarTentativas();
+        marcarPassoErrado(1);
+        if (tentativasRestantes <= 0) mostrarDerrota();
+    }
+}
+
+function marcarPassoErrado(idx) {
+    const p = document.getElementById("passo-" + idx);
+    if (p) {
+        p.className = "passo errado";
+        p.querySelector('.passo-icone').innerHTML = "&#10007;";
+        setTimeout(function() {
+            if (p.className.includes("errado")) {
+                p.className = "passo";
+                p.querySelector('.passo-icone').innerHTML = "&rarr;";
+            }
+        }, 1500);
+    }
+}
+
+function atualizarTentativas() {
+    const el = document.getElementById("tentativas-display");
+    el.textContent = tentativasRestantes;
+    el.className = "tentativas-display";
+    if (tentativasRestantes <= 2) el.classList.add("critico");
+    else if (tentativasRestantes <= 3) el.classList.add("aviso");
+}
+
+function mostrarVitoria() { document.getElementById("overlay-vitoria").classList.add("ativo"); }
+function mostrarDerrota() { document.getElementById("overlay-derrota").classList.add("ativo"); }
+
+document.getElementById("btn-proximo").addEventListener("click", function() {
+    window.location.href = "../index.html";
+});
+
+function reiniciarFase() {
+    questaoAtual = 0;
+    tentativasRestantes = 5;
+    atualizarTentativas();
+    document.getElementById("overlay-derrota").classList.remove("ativo");
+    inicializarQuestao();
+}
+
+inicializarQuestao();
+</script>
+</body>
+</html>
